@@ -1,20 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { Text, View, Button } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import Inicio from './src/components/InicioComponent';
+import ListarProductos from './src/components/ListarProductosComponent';
+import PaginaDetalle from './src/components/PaginaDetalleComponent';
+import PaginaAgregar from './src/components/PaginaAgregarComponent';
+
+const Stack = createNativeStackNavigator();
+function MyStack() {
+    return (
+    <Stack.Navigator>
+    <Stack.Screen name="Inicio" component={Inicio} />
+    <Stack.Screen name="ListarProductos" component={ListarProductos} options={{title: "Products"}} />
+    <Stack.Screen name="Detalles" component={PaginaDetalle} options={{title: "Editar Producto"}} />
+    <Stack.Screen name="Agregar" component={PaginaAgregar} options={{title: "Agregar Producto"}} />
+    </Stack.Navigator>
+);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+    return (
+    <NavigationContainer>
+    <MyStack />
+    </NavigationContainer>
+);
+}
