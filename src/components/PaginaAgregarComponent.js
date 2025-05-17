@@ -10,12 +10,13 @@ export default function PaginaAgregar() {
 
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
+    const [preciodeventa, setPreciodeventa] = useState('');
     const [preciodecosto, setPreciodecosto] = useState('');
     const [cantidad, setCantidad] = useState('');
     const [fotografia, setFotografia] = useState('');
 
     const Guardar = () => {
-        fetch(`${API_URL}/productos`, {
+        fetch(`${API_URL}/api/productos`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ export default function PaginaAgregar() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={style.Container}>
             <Input placeholder="Nombre" onChangeText={setNombre}/>
             <Input placeholder="Descripción" onChangeText={setDescripcion} inputStyle={style.Input} />
             <Input placeholder="Precio  de costo" onChangeText={setPreciodecosto} inputStyle={style.Input}/>
@@ -51,11 +52,11 @@ export default function PaginaAgregar() {
             <Input placeholder="URL de la imagen" onChangeText={setFotografia} inputStyle={style.Input}/>
 
             <TouchableOpacity 
-            style={styles.button} 
+            style={style.Button} 
             onPress={Guardar}
             >
                 <Text 
-                style={styles.TextButton}
+                style={style.TextButton}
                 > Guardar
                 </Text>
             </TouchableOpacity>

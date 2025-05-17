@@ -3,38 +3,46 @@ import { View, Text, Image, TouchableOpacity, Alert, StyleSheet } from 'react-na
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
-
-import { API_URL } from '../../utils/config';
+import { API_URL } from '../../utils/config'; 
 
 export default function PantallaInicio() {
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
     const navigation = useNavigation();
-
     const Entrar = () => {
-        if (!!usuario && !!contrasena) {
-            fetch(`${API_URL}/usuarios/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario, contrasenia: contrasena }),
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                const { autenticado } = responseJson;
-                if (autenticado) {
-                    navigation.navigate('ListarProductos');
-                } else {
-                    Alert.alert('Usuario', responseJson.message, [{ text: 'OK' }], { cancelable: false });
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-                Alert.alert('Aviso', 'Error de Internet!!', [{ text: 'OK' }], { cancelable: false });
-            });
-        } else {
-            Alert.alert('Aviso', 'No introdujo datos', [{ text: 'OK' }], { cancelable: false });
-        }
-    };
+  if (!!usuario && !!contrasena) {
+    fetch(`${API_URL}/api/usuarios`)
+  .then(async (response) => {
+    const contentType = response.headers.get('content-type');
+
+    if (contentType && contentType.includes('application/json')) {
+      const usuarios = await response.json();
+
+      const usuarioValido = usuarios.find(
+        (u) => u.usuario === usuario && u.contrasenia === contrasena
+      );
+
+      if (usuarioValido) {
+        navigation.navigate('ListarProductos');
+      } else {
+        Alert.alert('Error', 'Usuario o contraseña incorrectos');
+      }
+    } else {
+      const text = await response.text();
+      console.error('Respuesta no JSON:', text);
+      Alert.alert('Error', 'Respuesta inesperada del servidor');
+    }
+  })
+  .catch((error) => {
+    console.error('Error de red:', error);
+    Alert.alert('Error de conexión');
+  });
+
+  } else {
+    Alert.alert('Campos requeridos', 'Ingresa usuario y contraseña');
+  }
+};
+
 
     return (
         <View style={styles.container}>
